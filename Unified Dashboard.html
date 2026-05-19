@@ -1055,4 +1055,30 @@
 
     /* × dismiss interaction on Open Questions sections.
        Count = number of sections (categories) remaining.
-       When all dismissed 
+       When all dismissed (total === 0), hide the page head entirely. */
+    function recalcOQCount() {
+      var total = document.querySelectorAll('.oq-section').length;
+      var ph = document.querySelector('.ph-value');
+      if (ph) ph.textContent = total + ' Open Questions';
+      var pageHead = document.querySelector('.oq-page-head');
+      if (pageHead) pageHead.style.display = total === 0 ? 'none' : '';
+    }
+    document.querySelectorAll('.oq-x').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var section = btn.closest('.oq-section');
+        if (!section) return;
+        section.style.transition = 'opacity 220ms ease-out';
+        section.style.opacity = '0';
+        setTimeout(function () {
+          section.remove();
+          recalcOQCount();
+        }, 220);
+      });
+    });
+    recalcOQCount();
+  </script>
+
+</body>
+</html>
