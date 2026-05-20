@@ -1,4 +1,4 @@
-# II (Intelligent Investing) — Dashboard Prototype
+# II (Intelligent Investing) — Prototype
 
 Post-MVP dashboard prototype for Mogo's Intelligent Investing product.
 
