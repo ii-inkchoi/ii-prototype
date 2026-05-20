@@ -98,7 +98,7 @@
 
     /* COLUMN */
     .col {
-      padding: 24px 20px 120px;
+      padding: 60px 20px 120px;
       display: flex;
       flex-direction: column;
       gap: 56px;
@@ -111,13 +111,11 @@
       gap: 12px;
     }
 
-    /* THESIS / KILL LINE block — memo section with top header + bottom closure */
+    /* THESIS / KILL LINE block — memo section, header hairline only */
     .thesis-block {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      padding-bottom: 16px;
-      border-bottom: 0.5px solid var(--c-900);
     }
     .tk-row {
       display: flex;
@@ -140,39 +138,7 @@
       font-size: 15px;
       color: var(--c-400);
       letter-spacing: -0.02em;
-      line-height: 1.5;
-    }
-    .tk-body.is-clamped {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .show-toggle {
-      display: none;
-      font-size: 13px;
-      color: var(--c-700);
-      letter-spacing: -0.02em;
-      background: none;
-      border: none;
-      padding: 0;
-      font-family: inherit;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .show-toggle.visible {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .show-toggle:active {
-      opacity: 0.5;
-      transition: opacity 80ms ease;
-    }
-    .show-toggle .arrow {
-      font-weight: 300;
-      font-size: 14px;
-      line-height: 1;
+      line-height: 1.65;
     }
     .tk-meta {
       font-size: 11px;
@@ -181,12 +147,9 @@
       margin-left: auto;
     }
 
-    /* PERFORMANCE vs S&P — matches Main Dashboard perf-block exactly */
+    /* PERFORMANCE vs S&P — header + hairline pattern (matches Memo / Holdings) */
     .perf-vs-sp.section {
       gap: 16px;
-      padding: 16px 0;
-      border-top: 0.5px solid var(--c-900);
-      border-bottom: 0.5px solid var(--c-900);
     }
     .perf-vs-sp.section:active {
       opacity: 0.5;
@@ -196,12 +159,22 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      gap: 12px;
+      padding: 0 0 14px;
+      margin-bottom: 4px;
+      border-bottom: 0.5px solid var(--c-900);
     }
     .perf-title {
       font-size: 15px;
       color: var(--c-400);
       letter-spacing: -0.02em;
+    }
+    .perf-meta {
+      font-size: 11px;
+      color: var(--c-700);
+      letter-spacing: -0.02em;
+      text-align: right;
+      margin-left: auto;
+      margin-right: 4px;
     }
     .perf-row {
       display: flex;
@@ -232,7 +205,6 @@
       font-size: 14px;
       font-weight: 300;
       line-height: 1;
-      margin-left: 4px;
     }
     .perf-meta {
       font-size: 11px;
@@ -281,6 +253,29 @@
       flex-direction: column;
       gap: 25px;
     }
+    .pb-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 0 0 14px;
+      margin-bottom: 4px;
+      border-bottom: 0.5px solid var(--c-900);
+    }
+    .pb-header:active {
+      opacity: 0.5;
+      transition: opacity 80ms ease;
+    }
+    .pb-title {
+      font-size: 15px;
+      color: var(--c-400);
+      letter-spacing: -0.02em;
+    }
+    .pb-chev {
+      color: var(--c-700);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1;
+    }
     .pb-row {
       display: flex;
       flex-direction: column;
@@ -301,6 +296,11 @@
       color: var(--c-700);
       margin-left: 6px;
     }
+    .pb-value .pb-entry {
+      color: var(--c-700);
+      margin-left: 8px;
+      font-size: 13px;
+    }
     .pb-label {
       font-size: 11px;
       font-weight: 400;
@@ -311,7 +311,7 @@
     .pb-label .muted {
       color: var(--c-700);
     }
-    .view-holdings {
+    .view-link {
       display: inline-flex;
       align-items: baseline;
       gap: 4px;
@@ -322,13 +322,14 @@
       line-height: 1.1;
       margin-top: 4px;
       text-transform: capitalize;
+      align-self: flex-start;
     }
-    .view-holdings .chev {
+    .view-link .chev {
       font-size: 13px;
       font-weight: 300;
       color: var(--c-700);
     }
-    .view-holdings:active { opacity: 0.5; transition: opacity 80ms ease; }
+    .view-link:active { opacity: 0.5; transition: opacity 80ms ease; }
 
     /* NAV — History / Market / News / Research (v1 spec) */
     .nav {
@@ -396,10 +397,30 @@
 
   <div class="col">
 
-    <!-- 1. PERFORMANCE vs S&P 500 — anchor on the truth (drill-in to ATZ Performance Detail) -->
+    <!-- 1. MEMO — section header (drill-in to full memo) + Thesis + Kill line content -->
+    <section class="section thesis-block" aria-label="Memo">
+      <!-- Memo section header — drill-in to full memo -->
+      <a href="ATZ%20Memo.html" class="memo-link" aria-label="Open full memo">
+        <span class="memo-title">Memo</span>
+        <span class="memo-meta">Reviewed Apr 12, 2026 · 26d ago</span>
+        <span class="memo-chev" aria-hidden="true">›</span>
+      </a>
+
+      <div class="tk-row">
+        <span class="tk-lbl">Thesis</span>
+        <p class="tk-body">Aritzia is undervalued by ~40% on a SOTP basis. Brand momentum, US store rollout, and operating leverage drive multi-year compounding.</p>
+      </div>
+      <div class="tk-row">
+        <span class="tk-lbl">Kill Line</span>
+        <p class="tk-body">Same-store sales negative for two consecutive quarters. US expansion stalls below 8 new stores per year. Either invalidates the multi-year compounding thesis.</p>
+      </div>
+    </section>
+
+    <!-- 2. PERFORMANCE vs S&P 500 — anchor on the truth (drill-in to ATZ Performance Detail) -->
     <a href="ATZ%20Performance%20Detail.html" class="section perf-vs-sp" aria-label="Performance vs S&P 500">
       <div class="perf-header">
-        <p class="perf-title">Cumulative · 3 years 2 months</p>
+        <p class="perf-title">Performance</p>
+        <span class="perf-meta">Cumulative · 3 years 2 months</span>
         <span class="perf-chev" aria-hidden="true">›</span>
       </div>
       <div class="perf-row">
@@ -412,47 +433,22 @@
       </div>
       <div class="perf-row diff">
         <span class="perf-key">Alpha</span>
-        <span class="perf-val"><span class="perf-pp">+3,768.00</span>+28.4pp</span>
+        <span class="perf-val">+28.4pp</span>
       </div>
     </a>
 
-    <!-- 2. MEMO — section header (drill-in to full memo) + Thesis + Kill line content -->
-    <section class="section thesis-block" aria-label="Memo">
-      <!-- Memo section header — drill-in to full memo (Margin of safety, Confidence, Setup, Target, versions) -->
-      <a href="#" class="memo-link" aria-label="Open full memo">
-        <span class="memo-title">Memo</span>
-        <span class="memo-meta">Reviewed Apr 12, 2026 · 26d ago</span>
-        <span class="memo-chev" aria-hidden="true">›</span>
+    <!-- 4. HOLDINGS -->
+    <section class="section pos-basics" aria-label="Holdings">
+      <a href="Holdings.html" class="pb-header">
+        <span class="pb-title">Holdings</span>
+        <span class="pb-chev" aria-hidden="true">›</span>
       </a>
-
-      <div class="tk-row">
-        <span class="tk-lbl">Thesis</span>
-        <p class="tk-body is-clamped" data-truncate>Aritzia is undervalued by ~40% on a SOTP basis. Brand momentum, US store rollout, and operating leverage drive multi-year compounding.</p>
-        <div class="thesis-foot">
-          <button class="show-toggle" data-toggle type="button" aria-expanded="false">
-            <span class="arrow" aria-hidden="true">↓</span> Show more
-          </button>
-        </div>
-      </div>
-      <div class="tk-row">
-        <span class="tk-lbl">Kill line</span>
-        <p class="tk-body is-clamped" data-truncate>Same-store sales negative for two consecutive quarters. US expansion stalls below 8 new stores per year. Either invalidates the multi-year compounding thesis.</p>
-        <div class="thesis-foot">
-          <button class="show-toggle" data-toggle type="button" aria-expanded="false">
-            <span class="arrow" aria-hidden="true">↓</span> Show more
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. POSITION BASICS -->
-    <section class="section pos-basics" aria-label="Position basics">
       <div class="pb-row">
         <span class="pb-value">18,921.60 <span class="ccy">CAD</span></span>
         <span class="pb-label">Market Value</span>
       </div>
       <div class="pb-row">
-        <span class="pb-value">12.2%</span>
+        <span class="pb-value">12.2% <span class="pb-entry">entered 6.1%</span></span>
         <span class="pb-label">Portfolio Weight</span>
       </div>
       <div class="pb-row">
@@ -463,7 +459,6 @@
         <span class="pb-value">3y 2m</span>
         <span class="pb-label">Held <span class="muted">since Feb 14, 2023</span></span>
       </div>
-      <a href="#" class="view-holdings">View Holdings <span class="chev" aria-hidden="true">›</span></a>
     </section>
 
     <!-- 5. NAV — History / Market / News / Research -->
@@ -476,53 +471,12 @@
 
   </div>
 
-  <!-- Capital decision CTA (fixed bottom) -->
+  <!-- Capital Decision CTA (fixed bottom) -->
   <div class="capital-decision">
-    <a href="#" aria-label="Capital decision">
-      <span class="arrow">→</span> Capital decision
+    <a href="#" aria-label="Capital Decision">
+      <span class="arrow">→</span> Capital Decision
     </a>
   </div>
-
-  <script>
-    // Prose truncation (Thesis + Kill line) — show toggle only when content actually overflows the clamp
-    (function () {
-      document.querySelectorAll('[data-truncate]').forEach(function (body) {
-        var toggle = body.parentElement.querySelector('[data-toggle]');
-        if (!toggle) return;
-
-        var checkTruncation = function () {
-          var wasExpanded = toggle.getAttribute('aria-expanded') === 'true';
-          if (wasExpanded) return; // don't toggle visibility while expanded
-          if (body.scrollHeight > body.clientHeight + 1) {
-            toggle.classList.add('visible');
-          } else {
-            toggle.classList.remove('visible');
-          }
-        };
-
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(checkTruncation);
-        }
-        checkTruncation();
-        window.addEventListener('resize', checkTruncation);
-
-        toggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          var isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-          if (isExpanded) {
-            body.classList.add('is-clamped');
-            toggle.setAttribute('aria-expanded', 'false');
-            toggle.innerHTML = '<span class="arrow" aria-hidden="true">↓</span> Show more';
-            checkTruncation();
-          } else {
-            body.classList.remove('is-clamped');
-            toggle.setAttribute('aria-expanded', 'true');
-            toggle.innerHTML = '<span class="arrow" aria-hidden="true">↑</span> Show less';
-          }
-        });
-      });
-    })();
-  </script>
 
 </body>
 </html>
