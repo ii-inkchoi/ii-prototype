@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>II IG Series — OPPO-style · W1 → W8</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-black: #000000;
+    --c-1000:  #1C1C1C;
+    --c-900:   #232627;
+    --c-800:   #565B5E;
+    --c-700:   #929292;
+    --c-600:   #A7A7A7;
+    --c-400:   #C7C7C7;
+    --c-200:   #E3E2E2;
+    --c-white: #FFFFFF;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #2a2a2a;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+    color: #fff;
+  }
+  body {
+    padding: 60px 0 120px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 30px;
+  }
+  .doc-title {
+    color: #aaa; font-size: 13px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .doc-sub {
+    color: #888; font-size: 12px;
+    letter-spacing: -0.005em;
+    text-align: center;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+  .reel-label {
+    color: #ddd; font-size: 16px;
+    letter-spacing: -0.01em;
+    font-weight: 500;
+    text-align: center;
+  }
+  .reel-label .small {
+    display: block;
+    color: #888; font-weight: 400;
+    margin-top: 4px;
+    font-size: 13px;
+  }
+
+  /* horizontal scroll layout */
+  .scroll-instructions {
+    color: #888; font-size: 12px;
+    letter-spacing: -0.005em;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .scroll-instructions .actual {
+    color: #aaa;
+    margin-left: 12px;
+  }
+  .reels-row {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 110px;
+    padding: 30px 80px 60px;
+    width: 100vw;
+    max-width: 100vw;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+  }
+  .reels-row::-webkit-scrollbar { height: 10px; }
+  .reels-row::-webkit-scrollbar-track { background: #1a1a1a; }
+  .reels-row::-webkit-scrollbar-thumb { background: #444; border-radius: 5px; }
+  .reel-card {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    scroll-snap-align: center;
+    width: 432px;
+  }
+  .reel-desc {
+    width: 100%;
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+    padding-top: 12px;
+    border-top: 0.5px solid #2a2a2a;
+    text-align: left;
+  }
+  .reel-desc .label {
+    color: #ddd;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .reel-desc em {
+    color: #ccc;
+    font-style: italic;
+  }
+
+  /* SCALED PREVIEW
+     reel 의 source dimensions 는 1080×1920 그대로 유지 (production export 용).
+     화면 표시만 zoom 으로 축소. 모든 애니메이션 / 좌표계 그대로 작동. */
+  .reels-row .reel {
+    zoom: 0.4;
+  }
+  /* Firefox fallback */
+  @supports not (zoom: 0.4) {
+    .reels-row .reel {
+      transform: scale(0.4);
+      transform-origin: top left;
+      margin-right: -648px;
+      margin-bottom: -1152px;
+    }
+  }
+
+  /* =============================== */
+  /* SECTION DIVIDER                  */
+  /* =============================== */
+  .section-divider {
+    width: 1080px;
+    margin-top: 80px;
+    padding-top: 60px;
+    border-top: 0.5px solid #333;
+    text-align: center;
+  }
+  .section-divider h2 {
+    color: #fff; font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .section-divider p {
+    color: #888; font-size: 13px;
+    letter-spacing: -0.005em;
+    line-height: 1.55;
+  }
+
+  /* =============================== */
+  /* STATIC POST SECTION (1080×1350) */
+  /* =============================== */
+  .posts-row {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 110px;
+    padding: 30px 80px 60px;
+    width: 100vw;
+    max-width: 100vw;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+  }
+  .posts-row::-webkit-scrollbar { height: 10px; }
+  .posts-row::-webkit-scrollbar-track { background: #1a1a1a; }
+  .posts-row::-webkit-scrollbar-thumb { background: #444; border-radius: 5px; }
+
+  .post-card {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    scroll-snap-align: center;
+    width: 432px;
+  }
+
+  .post {
+    width: 1080px; height: 1350px;
+    background: var(--c-black);
+    color: var(--c-white);
+    position: relative; overflow: hidden;
+    box-shadow: 0 12px 60px rgba(0,0,0,0.6);
+    padding: 130px 100px 130px 100px;
+    display: flex; flex-direction: column;
+  }
+  /* SCALED PREVIEW — same zoom approach as reels */
+  .posts-row .post {
+    zoom: 0.4;
+  }
+  @supports not (zoom: 0.4) {
+    .posts-row .post {
+      transform: scale(0.4);
+      transform-origin: top left;
+      margin-right: -648px;
+      margin-bottom: -810px;
+    }
+  }
+
+  .post .week {
+    position: absolute;
+    bottom: 70px; left: 100px;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    color: var(--c-800);
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+  }
+  .post .url {
+    position: absolute;
+    bottom: 70px; right: 100px;
+    font-size: 16px;
+    color: var(--c-800);
+    letter-spacing: -0.01em;
+  }
+  .post .eyebrow {
+    font-size: 26px;
+    color: var(--c-700);
+    letter-spacing: -0.01em;
+    margin-bottom: 30px;
+    text-align: left;
+    position: static;
+    transform: none;
+    opacity: 1;
+  }
+  .post .hero {
+    font-size: 380px;
+    font-weight: 300;
+    letter-spacing: -0.05em;
+    color: var(--c-white);
+    line-height: 0.9;
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+    display: flex; align-items: baseline;
+    margin-top: auto; margin-bottom: auto;
+  }
+  .post .hero.smaller { font-size: 280px; }
+  .post .hero .prefix {
+    font-size: 200px;
+    color: var(--c-400);
+    margin-right: 10px;
+    letter-spacing: -0.04em;
+  }
+  .post .hero .suffix {
+    font-size: 140px;
+    color: var(--c-400);
+    margin-left: 14px;
+    letter-spacing: -0.04em;
+  }
+  .post .hero .divider {
+    font-size: 200px;
+    color: var(--c-700);
+    margin: 0 24px;
+    font-weight: 300;
+  }
+  .post .sub {
+    font-size: 24px;
+    color: var(--c-400);
+    letter-spacing: -0.02em;
+    line-height: 1.5;
+    margin-top: 50px;
+    padding-top: 36px;
+    border-top: 0.5px solid var(--c-900);
+    font-weight: 300;
+    max-width: 760px;
+    position: static;
+    transform: none;
+    opacity: 1;
+  }
+  .replay-btn {
+    background: #222; color: #ddd;
+    border: 0.5px solid #333;
+    padding: 8px 18px; font-size: 13px;
+    letter-spacing: -0.01em;
+    cursor: pointer; font-family: inherit;
+  }
+  .replay-btn:hover { background: #2a2a2a; }
+  .section-label {
+    color: #888; font-size: 13px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    align-self: flex-start;
+    margin-left: max(60px, calc(50% - 540px));
+    margin-top: 30px;
+  }
+
+  /* =============================== */
+  /* REEL CONTAINER — shared          */
+  /* =============================== */
+  .reel {
+    width: 1080px; height: 1920px;
+    background: var(--c-black);
+    position: relative; overflow: hidden;
+    box-shadow: 0 24px 100px rgba(0,0,0,0.7);
+  }
+  .reel .stage { position: absolute; inset: 0; }
+
+  /* top wedge */
+  .top-wedge {
+    position: absolute;
+    top: 80px; left: 100px;
+    display: inline-flex; align-items: center; gap: 14px;
+    z-index: 10;
+    opacity: 0;
+  }
+  .top-wedge svg { width: 36px; height: 36px; }
+  .top-wedge span {
+    font-size: 20px; color: var(--c-400);
+    letter-spacing: -0.02em;
+  }
+
+  /* w-index */
+  .w-index {
+    position: absolute;
+    bottom: 80px; right: 100px;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    color: var(--c-800);
+    opacity: 0;
+    z-index: 10;
+  }
+
+  /* Phase 1 stage — generic (each W has unique contents) */
+  .p1 {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    transform: translateY(-50%);
+    padding: 0 100px;
+    opacity: 0;
+  }
+
+  /* Phase 2-3 number */
+  .number-stage {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    transform: translate(0, -50%) scale(0.97);
+    padding: 0 100px;
+    opacity: 0;
+  }
+  .hero {
+    font-size: 380px;
+    font-weight: 300;
+    letter-spacing: -0.05em;
+    color: var(--c-white);
+    line-height: 0.9;
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+    display: flex; align-items: baseline;
+  }
+  .hero.smaller { font-size: 280px; }
+  .hero.smallest { font-size: 220px; }
+  .hero .suffix {
+    font-size: 140px;
+    color: var(--c-400);
+    margin-left: 14px;
+    letter-spacing: -0.04em;
+  }
+  .hero .suffix.lg { font-size: 160px; }
+  .hero .prefix {
+    font-size: 200px;
+    color: var(--c-400);
+    margin-right: 10px;
+    letter-spacing: -0.04em;
+  }
+  .hero .divider {
+    font-size: 240px;
+    color: var(--c-700);
+    margin: 0 28px;
+  }
+
+  /* Phase 3 eyebrow/meta */
+  .eyebrow {
+    position: absolute;
+    top: 50%; left: 100px;
+    transform: translateY(calc(-50% - 360px));
+    font-size: 28px;
+    color: var(--c-700);
+    letter-spacing: -0.02em;
+    opacity: 0;
+  }
+  .meta {
+    position: absolute;
+    top: 50%; left: 100px;
+    transform: translateY(calc(-50% + 230px));
+    font-size: 24px;
+    color: var(--c-400);
+    letter-spacing: -0.02em;
+    padding-top: 30px;
+    border-top: 0.5px solid var(--c-900);
+    max-width: 760px;
+    opacity: 0;
+  }
+
+  /* Phase 4 callout */
+  .callout {
+    position: absolute;
+    top: 50%; left: 100px; right: 100px;
+    transform: translateY(80px);
+    text-align: left;
+    opacity: 0;
+  }
+  .callout .line {
+    font-size: 84px;
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    color: var(--c-700);
+  }
+  .callout .line strong {
+    color: var(--c-white);
+    font-weight: 500;
+  }
+
+  /* Phase 5 end card */
+  .end-card {
+    position: absolute;
+    inset: 0;
+    padding: 0 100px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    background: var(--c-black);
+    opacity: 0;
+    z-index: 20;
+  }
+  .end-wedge {
+    display: inline-flex; align-items: center; gap: 18px;
+    margin-bottom: 70px;
+  }
+  .end-wedge svg { width: 48px; height: 48px; }
+  .end-wedge span {
+    font-size: 28px; color: var(--c-400);
+    letter-spacing: -0.02em;
+  }
+  .end-divider {
+    width: 220px; height: 0.5px;
+    background: var(--c-900); margin-bottom: 50px;
+  }
+  .end-url {
+    font-size: 42px; color: var(--c-white);
+    letter-spacing: -0.02em; margin-bottom: 18px;
+    font-weight: 400;
+  }
+  .end-handle {
+    font-size: 22px; color: var(--c-700);
+    letter-spacing: -0.01em;
+  }
+
+  /* =============================== */
+  /* SHARED ANIMATIONS               */
+  /* Master 11s timeline             */
+  /* =============================== */
+
+  /* All animations run only when reel has .playing class */
+
+  /* wedge + w-index */
+  .reel.playing .top-wedge,
+  .reel.playing .w-index {
+    animation: chrome-life 11s linear forwards;
+  }
+  @keyframes chrome-life {
+    0%, 2.7%      { opacity: 0; }
+    3%            { opacity: 1; }
+    90.9%         { opacity: 1; }
+    91.5%, 100%   { opacity: 0; }
+  }
+
+  /* Phase 1 overall opacity — abstract hold extended 2x */
+  .reel.playing .p1 {
+    animation: p1-life 11s linear forwards;
+  }
+  @keyframes p1-life {
+    0%, 2.7%   { opacity: 0; }
+    3%         { opacity: 1; }
+    36%        { opacity: 1; }     /* extended hold — was 18% */
+    40%        { opacity: 0.15; }
+    45%        { opacity: 0.05; }
+    48%, 100%  { opacity: 0; }
+  }
+
+  /* Number stage tick-in + hold + Phase 4 transition */
+  .reel.playing .number-stage {
+    animation: number-life 11s linear forwards;
+  }
+  @keyframes number-life {
+    0%, 36%       { opacity: 0; transform: translate(0, -50%) scale(0.97); }
+    38%           { opacity: 0.4; transform: translate(0, -50%) scale(0.97); }
+    40%           { opacity: 1; transform: translate(0, -50%) scale(1); }
+    76%           { opacity: 1; transform: translate(0, -50%) scale(1); }
+    80%           { opacity: 1; transform: translate(0, -180%) scale(0.45); }
+    90.9%         { opacity: 1; transform: translate(0, -180%) scale(0.45); }
+    91.5%         { opacity: 0; transform: translate(0, -180%) scale(0.45); }
+    100%          { opacity: 0; }
+  }
+
+  /* Eyebrow + Meta */
+  .reel.playing .eyebrow,
+  .reel.playing .meta {
+    animation: aux-life 11s linear forwards;
+  }
+  @keyframes aux-life {
+    0%, 53%   { opacity: 0; }
+    56%       { opacity: 1; }
+    76%       { opacity: 1; }
+    80%       { opacity: 0; }
+    100%      { opacity: 0; }
+  }
+
+  /* Phase 4 callout */
+  .reel.playing .callout {
+    animation: callout-life 11s linear forwards;
+  }
+  @keyframes callout-life {
+    0%, 80%   { opacity: 0; }
+    82%       { opacity: 1; }
+    90.9%     { opacity: 1; }
+    92%       { opacity: 0; }
+    100%      { opacity: 0; }
+  }
+
+  /* Phase 5 end card */
+  .reel.playing .end-card {
+    animation: end-life 11s linear forwards;
+  }
+  @keyframes end-life {
+    0%, 90.9%   { opacity: 0; }
+    91.5%       { opacity: 1; }
+    100%        { opacity: 1; }
+  }
+
+  /* =============================== */
+  /* W1 — Two curves diverge          */
+  /* =============================== */
+  .p1-w1 svg {
+    width: 100%; height: 600px;
+    display: block;
+  }
+  .reel.playing .p1-w1 .line-port {
+    stroke: var(--c-white);
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: w1-port 11s linear forwards;
+  }
+  .reel.playing .p1-w1 .line-sp {
+    stroke: var(--c-700);
+    stroke-width: 2.5;
+    stroke-dasharray: 10 8;
+    fill: none;
+    opacity: 0;
+    animation: w1-sp 11s linear forwards;
+  }
+  .reel.playing .p1-w1 .gap {
+    fill: var(--c-900);
+    opacity: 0;
+    animation: w1-gap 11s linear forwards;
+  }
+  @keyframes w1-port {
+    0%, 2.7% { stroke-dashoffset: 1200; }
+    13.6%    { stroke-dashoffset: 0; }
+    100%     { stroke-dashoffset: 0; }
+  }
+  @keyframes w1-sp {
+    0%, 6.4% { opacity: 0; }
+    16.4%    { opacity: 0.95; }
+    100%     { opacity: 0.95; }
+  }
+  @keyframes w1-gap {
+    0%, 15%  { opacity: 0; }
+    18%      { opacity: 0.45; }
+    27%      { opacity: 0.15; }
+    30%, 100%{ opacity: 0; }
+  }
+
+  /* =============================== */
+  /* W2 — 5×10 dot grid (19 white + 31 muted) */
+  /* =============================== */
+  .p1-w2 {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 40px;
+  }
+  .dot-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 36px);
+    gap: 36px;
+    clip-path: inset(0 100% 0 0);
+  }
+  .reel.playing .dot-grid {
+    animation: w2-reveal 11s linear forwards;
+  }
+  @keyframes w2-reveal {
+    0%, 2.7%   { clip-path: inset(0 100% 0 0); }
+    13.6%      { clip-path: inset(0 0 0 0); }
+    100%       { clip-path: inset(0 0 0 0); }
+  }
+  .dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--c-700);
+  }
+  .dot.win { background: var(--c-white); }
+  .dot-count {
+    display: flex; gap: 80px;
+    font-size: 22px;
+    color: var(--c-700);
+    letter-spacing: -0.02em;
+  }
+  .dot-count .win-c {
+    color: var(--c-white);
+  }
+
+  /* =============================== */
+  /* W3 — Cash drag area going down  */
+  /* =============================== */
+  .p1-w3 svg {
+    width: 100%; height: 600px;
+    display: block;
+  }
+  .reel.playing .p1-w3 .cash-area {
+    fill: var(--c-900);
+    opacity: 0;
+    animation: w3-area 11s linear forwards;
+  }
+  .reel.playing .p1-w3 .cash-line {
+    stroke: var(--c-white);
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: w3-line 11s linear forwards;
+  }
+  @keyframes w3-line {
+    0%, 2.7% { stroke-dashoffset: 1200; }
+    14%      { stroke-dashoffset: 0; }
+    100%     { stroke-dashoffset: 0; }
+  }
+  @keyframes w3-area {
+    0%, 12%  { opacity: 0; }
+    16%      { opacity: 0.6; }
+    100%     { opacity: 0.6; }
+  }
+
+  /* =============================== */
+  /* W4 — 4 yearly bars              */
+  /* =============================== */
+  .p1-w4 {
+    display: flex; flex-direction: column;
+    align-items: center;
+  }
+  .yr-bars {
+    width: 100%;
+    height: 480px;
+    position: relative;
+    display: flex; align-items: center;
+    justify-content: space-around;
+    padding: 0 60px;
+  }
+  .yr-baseline {
+    position: absolute;
+    top: 50%; left: 60px; right: 60px;
+    height: 0.5px;
+    background: var(--c-700);
+  }
+  .yr-col {
+    width: 90px;
+    height: 100%;
+    position: relative;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .yr-bar {
+    position: absolute; top: 50%; left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    transform-origin: top center;
+    background: var(--c-700);
+    transform: translateX(-50%) scaleY(0);
+  }
+  .yr-bar.neg { /* extends downward */ }
+  .yr-bar.pos { /* extends upward */
+    transform-origin: bottom center;
+    top: auto; bottom: 50%;
+    transform: translateX(-50%) scaleY(0);
+  }
+  .yr-bar.hero { background: var(--c-white); }
+  .yr-label {
+    position: absolute; bottom: -50px;
+    font-size: 22px;
+    color: var(--c-700);
+    letter-spacing: -0.02em;
+  }
+  /* Per-bar alpha value labels — positioned at the tip of each bar */
+  .yr-value {
+    position: absolute; left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    color: var(--c-700);
+    letter-spacing: -0.02em;
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+    white-space: nowrap;
+    opacity: 0;
+  }
+  .yr-col.y23 .yr-value { top: calc(50% + 80px + 14px); }
+  .yr-col.y24 .yr-value {
+    top: calc(50% + 200px + 14px);
+    color: var(--c-white);
+    font-size: 24px;
+    font-weight: 500;
+  }
+  .yr-col.y25 .yr-value { bottom: calc(50% + 56px + 14px); }
+  .yr-col.y26 .yr-value { top: calc(50% + 60px + 14px); }
+  .reel.playing .yr-col .yr-value {
+    animation: yr-value-in 11s linear forwards;
+  }
+  @keyframes yr-value-in {
+    0%, 14%   { opacity: 0; }
+    18%, 100% { opacity: 1; }
+  }
+  /* Per-bar animation: scaleY from 0 to height */
+  .reel.playing .yr-col .yr-bar {
+    animation: yr-grow 11s linear forwards;
+  }
+  /* heights: 2023 = -6.0pp (small), 2024 = -15.5pp (BIG), 2025 = +4.2 (med pos), 2026 = -4.2 (small) */
+  .yr-col.y23 .yr-bar { height: 80px; }
+  .yr-col.y24 .yr-bar { height: 200px; }
+  .yr-col.y25 .yr-bar { height: 56px; }
+  .yr-col.y26 .yr-bar { height: 60px; }
+  /* stagger delay per col */
+  .reel.playing .yr-col.y23 .yr-bar { animation-delay: 0s; }
+  .reel.playing .yr-col.y24 .yr-bar { animation-delay: 0s; }
+  .reel.playing .yr-col.y25 .yr-bar { animation-delay: 0s; }
+  .reel.playing .yr-col.y26 .yr-bar { animation-delay: 0s; }
+  @keyframes yr-grow {
+    0%, 3%   { transform: translateX(-50%) scaleY(0); }
+    16%      { transform: translateX(-50%) scaleY(1); }
+    100%     { transform: translateX(-50%) scaleY(1); }
+  }
+
+  /* =============================== */
+  /* W5 — Peak-to-trough drawdown    */
+  /* =============================== */
+  .p1-w5 svg {
+    width: 100%; height: 600px;
+    display: block;
+  }
+  .reel.playing .p1-w5 .dd-line {
+    stroke: var(--c-white);
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: w5-line 11s linear forwards;
+  }
+  .reel.playing .p1-w5 .dd-peak,
+  .reel.playing .p1-w5 .dd-trough {
+    opacity: 0;
+    animation: w5-marker 11s linear forwards;
+  }
+  .reel.playing .p1-w5 .dd-trough { animation-delay: 0s; }
+  @keyframes w5-line {
+    0%, 2.7%  { stroke-dashoffset: 1400; }
+    16%       { stroke-dashoffset: 0; }
+    100%      { stroke-dashoffset: 0; }
+  }
+  @keyframes w5-marker {
+    0%, 15%   { opacity: 0; }
+    18%       { opacity: 1; }
+    100%      { opacity: 1; }
+  }
+
+  /* =============================== */
+  /* W6 — 60-notch progress bar      */
+  /* =============================== */
+  .p1-w6 {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 40px;
+  }
+  .notch-bar {
+    display: grid;
+    grid-template-columns: repeat(60, 12px);
+    gap: 4px;
+    width: 100%;
+    max-width: 880px;
+    clip-path: inset(0 100% 0 0);
+  }
+  .reel.playing .notch-bar {
+    animation: w6-fill 11s linear forwards;
+  }
+  @keyframes w6-fill {
+    0%, 2.7%  { clip-path: inset(0 100% 0 0); }
+    /* fills 38/60 = 63.3% then stops */
+    13%       { clip-path: inset(0 36.7% 0 0); }  /* 1.4s — fills to 38 */
+    18%       { clip-path: inset(0 36.7% 0 0); }  /* 2.0s — held */
+    100%      { clip-path: inset(0 36.7% 0 0); }
+  }
+  .notch {
+    width: 12px; height: 60px;
+    background: var(--c-700);
+  }
+  .notch.filled { background: var(--c-white); }
+  .notch-count {
+    font-size: 22px;
+    color: var(--c-700);
+    letter-spacing: -0.02em;
+  }
+
+  /* =============================== */
+  /* W7 — 47 dots (7×7 grid, 47 of 49) */
+  /* =============================== */
+  .p1-w7 {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 40px;
+  }
+  .day-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 60px);
+    gap: 30px;
+    clip-path: inset(0 100% 0 0);
+  }
+  .reel.playing .day-grid {
+    animation: w7-reveal 11s linear forwards;
+  }
+  @keyframes w7-reveal {
+    0%, 2.7%  { clip-path: inset(0 100% 0 0); }
+    14%       { clip-path: inset(0 0 0 0); }
+    100%      { clip-path: inset(0 0 0 0); }
+  }
+  .day {
+    width: 60px; height: 60px;
+    background: var(--c-white);
+  }
+  .day.empty { background: transparent; border: 0.5px solid var(--c-900); }
+
+  /* =============================== */
+  /* W8 — 20-cell month grid (5×4)   */
+  /* =============================== */
+  .p1-w8 {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 40px;
+  }
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 110px);
+    gap: 30px;
+    clip-path: inset(0 100% 0 0);
+  }
+  .reel.playing .month-grid {
+    animation: w8-reveal 11s linear forwards;
+  }
+  @keyframes w8-reveal {
+    0%, 2.7%  { clip-path: inset(0 100% 0 0); }
+    14%       { clip-path: inset(0 0 0 0); }
+    100%      { clip-path: inset(0 0 0 0); }
+  }
+  .month {
+    width: 110px; height: 90px;
+    background: var(--c-white);
+  }
+
+  /* spec card */
+  .spec {
+    width: 1080px;
+    background: #111;
+    color: #ddd;
+    padding: 50px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    margin-top: 40px;
+  }
+  .spec h2 { font-size: 18px; margin-bottom: 16px; color: #fff; font-weight: 500; }
+  .spec h3 { font-size: 14px; margin-top: 28px; margin-bottom: 8px; color: var(--c-400); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+  .spec table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+  .spec th, .spec td {
+    padding: 8px 12px; text-align: left;
+    border-bottom: 0.5px solid #2a2a2a;
+    vertical-align: top;
+  }
+  .spec th { color: var(--c-400); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; }
+  .spec ul { padding-left: 18px; }
+  .spec li { margin-bottom: 6px; }
+  .spec code { background: #222; padding: 1px 6px; border-radius: 2px; font-size: 12px; color: #ccc; }
+</style>
+</head>
+<body>
+
+<div class="doc-title">II IG Series — OPPO-style · W1 → W8 · 1080 × 1920 · 11s each</div>
+<div class="doc-sub">Same 5-phase structure (abstract → number → clean → callout → end). Each W has its own reveal mechanism in Phase 1.</div>
+<div class="scroll-instructions">
+  ← Scroll horizontally to view all 8 reels →
+  <span class="actual">Display: 432 × 768 · Source: 1080 × 1920</span>
+</div>
+
+<div class="reels-row">
+
+<!-- ============================== -->
+<!-- W1 — −5.8pp Alpha -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W1 · −5.8pp · Alpha annualized
+  <span class="small">two-curve divergence</span>
+</div>
+<div class="reel" id="r1">
+  <div class="stage">
+    <div class="p1 p1-w1">
+      <svg viewBox="0 0 880 600" preserveAspectRatio="none">
+        <polygon class="gap"
+          points="0,460 110,425 220,395 330,360 440,320 550,275 660,225 770,170 880,115
+                 880,225 770,265 660,300 550,330 440,355 330,375 220,395 110,415 0,430" />
+        <polyline class="line-port"
+          points="0,430 110,415 220,395 330,375 440,355 550,330 660,300 770,265 880,225" />
+        <polyline class="line-sp"
+          points="0,460 110,425 220,395 330,360 440,320 550,275 660,225 770,170 880,115" />
+      </svg>
+    </div>
+    <div class="number-stage">
+      <div class="hero"><span>−5.8</span><span class="suffix">pp</span></div>
+    </div>
+    <div class="eyebrow">alpha · annualized</div>
+    <div class="meta">vs. S&amp;P 500 · 38 of 60 months tracked</div>
+    <div class="callout">
+      <div class="line">Up. And still <strong>behind</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W01 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r1')">↺ Replay W1</button>
+<div class="reel-desc">
+  <span class="label">The headline</span>
+  Three years of annualized alpha. The portfolio underperformed the S&amp;P 500 by 5.8 percentage points <em>per year</em>. Every other number in this series explains the <em>why</em>.
+</div>
+</div>
+
+<!-- ============================== -->
+<!-- W2 — 38% Win rate -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W2 · 38% · Win rate
+  <span class="small">50-dot grid (19 white / 31 muted)</span>
+</div>
+<div class="reel" id="r2">
+  <div class="stage">
+    <div class="p1 p1-w2">
+      <div class="dot-grid" id="dotgrid"></div>
+      <div class="dot-count">
+        <span class="win-c">19 wins</span>
+        <span>31 losses</span>
+      </div>
+    </div>
+    <div class="number-stage">
+      <div class="hero"><span>38</span><span class="suffix">%</span></div>
+    </div>
+    <div class="eyebrow">win rate vs. S&amp;P 500</div>
+    <div class="meta">19 of 50 positions beat the index</div>
+    <div class="callout">
+      <div class="line">Nineteen wins. <strong>Thirty-one losses</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W02 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r2')">↺ Replay W2</button>
+<div class="reel-desc">
+  <span class="label">Loss #1 · Frequency</span>
+  Of 50 positions, only 19 beat the index. 31 didn't. The asymmetry is the message — most platforms show wins. This one shows the count.
+</div>
+</div>
+
+<!-- ============================== -->
+<!-- W3 — −$1,840 Cash drag -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W3 · −$1,840 · Cash drag
+  <span class="small">downward area accumulating</span>
+</div>
+<div class="reel" id="r3">
+  <div class="stage">
+    <div class="p1 p1-w3">
+      <svg viewBox="0 0 880 600" preserveAspectRatio="none">
+        <polygon class="cash-area"
+          points="0,100 110,140 220,200 330,260 440,330 550,400 660,460 770,510 880,540
+                 880,560 0,560" />
+        <polyline class="cash-line"
+          points="0,100 110,140 220,200 330,260 440,330 550,400 660,460 770,510 880,540" />
+      </svg>
+    </div>
+    <div class="number-stage">
+      <div class="hero smaller"><span class="prefix">−$</span><span>1,840</span></div>
+    </div>
+    <div class="eyebrow">cash drag · 3 years</div>
+    <div class="meta">avg 16% cash · S&amp;P returned +24.0% over same window</div>
+    <div class="callout">
+      <div class="line">Idle. <strong>Still expensive</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W03 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r3')">↺ Replay W3</button>
+<div class="reel-desc">
+  <span class="label">Loss #2 · The cost of idle</span>
+  Average 16% cash held over 3 years. Had that capital been in the S&amp;P, it would have earned <em>+$1,840</em>. Idle capital is a position too — and a costly one.
+</div>
+</div>
+
+<!-- ============================== -->
+<!-- W4 — −15.5pp 2024 -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W4 · −15.5pp · 2024 alpha
+  <span class="small">4 yearly bars, 2024 stands out</span>
+</div>
+<div class="reel" id="r4">
+  <div class="stage">
+    <div class="p1 p1-w4">
+      <div class="yr-bars">
+        <div class="yr-baseline"></div>
+        <div class="yr-col y23">
+          <div class="yr-bar neg" style="top: 50%;"></div>
+          <span class="yr-value">−6.0pp</span>
+          <div class="yr-label">2023</div>
+        </div>
+        <div class="yr-col y24">
+          <div class="yr-bar neg hero" style="top: 50%;"></div>
+          <span class="yr-value">−15.5pp</span>
+          <div class="yr-label">2024</div>
+        </div>
+        <div class="yr-col y25">
+          <div class="yr-bar pos" style="bottom: 50%;"></div>
+          <span class="yr-value">+4.2pp</span>
+          <div class="yr-label">2025</div>
+        </div>
+        <div class="yr-col y26">
+          <div class="yr-bar neg" style="top: 50%;"></div>
+          <span class="yr-value">−4.2pp</span>
+          <div class="yr-label">2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="number-stage">
+      <div class="hero"><span>−15.5</span><span class="suffix">pp</span></div>
+    </div>
+    <div class="eyebrow">2024 alpha</div>
+    <div class="meta">portfolio +8.6% · S&amp;P 500 +24.1%</div>
+    <div class="callout">
+      <div class="line">A good year. <strong>By the wrong measure</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W04 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r4')">↺ Replay W4</button>
+<div class="reel-desc">
+  <span class="label">Loss #3 · The "good year" trap</span>
+  2024 portfolio returned +8.6% — positive in absolute terms. But the S&amp;P returned +24.1%. Being up doesn't mean ahead. The benchmark is the only honest mirror.
+</div>
+</div>
+
+<!-- ============================== -->
+<!-- W5 — −18.4% Max drawdown -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W5 · −18.4% · Max drawdown
+  <span class="small">peak then collapse</span>
+</div>
+<div class="reel" id="r5">
+  <div class="stage">
+    <div class="p1 p1-w5">
+      <svg viewBox="0 0 880 600" preserveAspectRatio="none">
+        <polyline class="dd-line"
+          points="0,440 110,400 220,340 330,260 440,200 470,180 500,260 540,400 600,500 700,540 800,560 880,560" />
+        <circle class="dd-peak" cx="470" cy="180" r="6" fill="#C7C7C7"/>
+        <circle class="dd-trough" cx="800" cy="560" r="6" fill="#FFFFFF"/>
+      </svg>
+    </div>
+    <div class="number-stage">
+      <div class="hero"><span>−18.4</span><span class="suffix">%</span></div>
+    </div>
+    <div class="eyebrow">max drawdown · 3 years</div>
+    <div class="meta">S&amp;P 500 same window: −12.1%</div>
+    <div class="callout">
+      <div class="line">Peak. Then <strong>trough</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W05 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r5')">↺ Replay W5</button>
+<div class="reel-desc">
+  <span class="label">Loss #4 · Volatility</span>
+  Peak-to-trough decline over 3 years. The S&amp;P in the same window: −12.1%. The portfolio fell deeper than the market. Volatility isn't risk — but it's a mirror of self-awareness.
+</div>
+</div>
+
+<!-- ============================== -->
+<!-- W6 — 38/60 months -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W6 · 38/60 · Months tracked
+  <span class="small">progress bar fills, then stops</span>
+</div>
+<div class="reel" id="r6">
+  <div class="stage">
+    <div class="p1 p1-w6">
+      <div class="notch-bar" id="notchbar"></div>
+      <div class="notch-count">38 of 60 months</div>
+    </div>
+    <div class="number-stage">
+      <div class="hero smaller"><span>38</span><span class="divider">/</span><span>60</span></div>
+    </div>
+    <div class="eyebrow">months tracked</div>
+    <div class="meta">5-year threshold required · signal: Mar 2028</div>
+    <div class="callout">
+      <div class="line">Not <strong>yet</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W06 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r6')">↺ Replay W6</button>
+<div class="reel-desc">
+  <span class="label">Pivot · Patience as doctrine</span>
+  A meaningful active-vs-index track record requires 5 years (60 months). We're 38 months in. 22 to go. <em>The real signal isn't until 2028. Until then, it's all noise.</em> The series' turning point.
+</div>
+</div>
+
+<!-- ============================== -->
+<!-- W7 — 47 days -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W7 · 47 days · Since last trade
+  <span class="small">7×7 grid (47 of 49 cells)</span>
+</div>
+<div class="reel" id="r7">
+  <div class="stage">
+    <div class="p1 p1-w7">
+      <div class="day-grid" id="daygrid"></div>
+    </div>
+    <div class="number-stage">
+      <div class="hero"><span>47</span><span class="suffix">days</span></div>
+    </div>
+    <div class="eyebrow">since last trade</div>
+    <div class="meta">turnover 42% · S&amp;P turnover ~4%</div>
+    <div class="callout">
+      <div class="line">Forty-seven days. <strong>Recorded</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W07 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r7')">↺ Replay W7</button>
+<div class="reel-desc">
+  <span class="label">Discipline #1 · Intentional inaction</span>
+  Forty-seven days since the last trade. Turnover 42% versus the S&amp;P at ~4%. Doing nothing is also a recorded decision. The system records it either way.
+</div>
+</div>
+
+<!-- ============================== -->
+<!-- W8 — 1y 8m -->
+<!-- ============================== -->
+<div class="reel-card">
+<div class="reel-label">
+  W8 · 1y 8m · Avg holding period
+  <span class="small">20 month cells (5×4)</span>
+</div>
+<div class="reel" id="r8">
+  <div class="stage">
+    <div class="p1 p1-w8">
+      <div class="month-grid" id="monthgrid"></div>
+    </div>
+    <div class="number-stage">
+      <div class="hero"><span>1y</span><span class="divider">·</span><span>8m</span></div>
+    </div>
+    <div class="eyebrow">avg holding period</div>
+    <div class="meta">the discipline metric</div>
+    <div class="callout">
+      <div class="line">Time. Not <strong>activity</strong>.</div>
+    </div>
+    <div class="top-wedge">
+      <svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg>
+      <span>Intelligent Investing</span>
+    </div>
+    <div class="w-index">W08 / 08</div>
+  </div>
+  <div class="end-card">
+    <div class="end-wedge"><svg viewBox="0 0 36 36"><path d="M4 32 L18 4 L22 4 L8 32 Z" fill="#C7C7C7"/><path d="M16 32 L30 4 L34 4 L20 32 Z" fill="#C7C7C7"/></svg><span>Intelligent Investing</span></div>
+    <div class="end-divider"></div>
+    <div class="end-url">intelligentinvesting.app</div>
+    <div class="end-handle">@intelligentinvesting · iOS beta</div>
+  </div>
+</div>
+<button class="replay-btn" onclick="replay('r8')">↺ Replay W8</button>
+<div class="reel-desc">
+  <span class="label">Discipline #2 · Time is the metric</span>
+  Average holding period: 20 months. <em>Built around decisions, not activity.</em> The paradox of the serious active investor — longer holds, fewer trades, better outcomes. The series closes here.
+</div>
+</div>
+
+</div><!-- /reels-row -->
+
+<!-- ============================== -->
+<!-- STATIC POST VERSION (1080×1350) -->
+<!-- ============================== -->
+<div class="section-divider">
+  <h2>Static Post Version · 1080 × 1350</h2>
+  <p>4:5 portrait · feed post format · no animation · weekly cadence backbone</p>
+</div>
+<div class="scroll-instructions">
+  ← Scroll horizontally to view all 8 posts →
+  <span class="actual">Display: 432 × 540 · Source: 1080 × 1350</span>
+</div>
+
+<div class="posts-row">
+
+  <!-- W1 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W1 · −5.8pp · Alpha annualized
+      <span class="small">the headline</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">alpha · annualized</div>
+      <div class="hero"><span>−5.8</span><span class="suffix">pp</span></div>
+      <div class="sub">vs. S&amp;P 500 · 38 of 60 months tracked</div>
+      <div class="week">W01 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">The headline</span>
+      Same data as W1 Reel, in static form. Designed for weekly feed cadence — strongest profile-grid coherence.
+    </div>
+  </div>
+
+  <!-- W2 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W2 · 38% · Win rate
+      <span class="small">loss #1 — frequency</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">win rate vs. S&amp;P 500</div>
+      <div class="hero"><span>38</span><span class="suffix">%</span></div>
+      <div class="sub">19 of 50 positions beat the index</div>
+      <div class="week">W02 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">Loss #1 · Frequency</span>
+      The asymmetry stripped to the number. The dot-grid visualization belongs to the Reel; here the count is the message.
+    </div>
+  </div>
+
+  <!-- W3 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W3 · −$1,840 · Cash drag
+      <span class="small">loss #2 — cost of idle</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">cash drag · 3 years</div>
+      <div class="hero smaller"><span class="prefix">−$</span><span>1,840</span></div>
+      <div class="sub">avg 16% cash · S&amp;P returned +24.0% over same window</div>
+      <div class="week">W03 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">Loss #2 · The cost of idle</span>
+      A single dollar figure. Idle capital is a position too — and a costly one. No chart needed.
+    </div>
+  </div>
+
+  <!-- W4 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W4 · −15.5pp · 2024 alpha
+      <span class="small">loss #3 — "good year" trap</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">2024 alpha</div>
+      <div class="hero"><span>−15.5</span><span class="suffix">pp</span></div>
+      <div class="sub">portfolio +8.6% · S&amp;P 500 +24.1%</div>
+      <div class="week">W04 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">Loss #3 · The "good year" trap</span>
+      Same number, no bar chart. The sub line carries the contradiction: portfolio was up, but the benchmark was up more.
+    </div>
+  </div>
+
+  <!-- W5 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W5 · −18.4% · Max drawdown
+      <span class="small">loss #4 — volatility</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">max drawdown · 3 years</div>
+      <div class="hero"><span>−18.4</span><span class="suffix">%</span></div>
+      <div class="sub">S&amp;P 500 same window: −12.1%</div>
+      <div class="week">W05 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">Loss #4 · Volatility</span>
+      Peak-to-trough decline. Deeper than the market. Stated without the line graph.
+    </div>
+  </div>
+
+  <!-- W6 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W6 · 38/60 · Months tracked
+      <span class="small">pivot · patience</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">months tracked</div>
+      <div class="hero smaller"><span>38</span><span class="divider">/</span><span>60</span></div>
+      <div class="sub">a meaningful track record requires 5 years · signal: Mar 2028</div>
+      <div class="week">W06 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">Pivot · Patience as doctrine</span>
+      The fraction is the message. Until 2028, the alpha is noise. The series' turning point.
+    </div>
+  </div>
+
+  <!-- W7 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W7 · 47 days · Since last trade
+      <span class="small">discipline #1 — inaction</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">since last trade</div>
+      <div class="hero"><span>47</span><span class="suffix">days</span></div>
+      <div class="sub">turnover 42% · S&amp;P turnover ~4%</div>
+      <div class="week">W07 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">Discipline #1 · Intentional inaction</span>
+      Inaction as a recorded decision. The system tracks the silence too.
+    </div>
+  </div>
+
+  <!-- W8 -->
+  <div class="post-card">
+    <div class="reel-label">
+      W8 · 1y 8m · Avg holding period
+      <span class="small">discipline #2 — time</span>
+    </div>
+    <div class="post">
+      <div class="eyebrow">avg holding period</div>
+      <div class="hero"><span>1y</span><span class="divider">·</span><span>8m</span></div>
+      <div class="sub">the discipline metric</div>
+      <div class="week">W08 / 08</div>
+      <div class="url">intelligentinvesting.app</div>
+    </div>
+    <div class="reel-desc">
+      <span class="label">Discipline #2 · Time is the metric</span>
+      Built around decisions, not activity. The series closes here — time, not minutes.
+    </div>
+  </div>
+
+</div><!-- /posts-row -->
+
+<!-- ============================== -->
+<!-- SPEC                            -->
+<!-- ============================== -->
+<div class="spec">
+  <h2>Series Spec — OPPO-style W1 → W8</h2>
+  <p style="color:#aaa; margin-bottom:16px;">8 weekly Reels using the same OPPO-style 5-phase structure. Each W has its own data-thematic Phase 1 reveal; everything else is templated.</p>
+
+  <h3>Phase 1 reveal per W</h3>
+  <table>
+    <thead><tr><th>W</th><th>Number</th><th>Phase 1 mechanism</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td><code>−5.8pp</code></td><td>Two curves diverge — portfolio (solid) below, S&amp;P (dashed) above. Gap is the alpha.</td></tr>
+      <tr><td>W2</td><td><code>38%</code></td><td>5×10 dot grid wipes in. 19 white (winners) on left, 31 muted (losers) on right.</td></tr>
+      <tr><td>W3</td><td><code>−$1,840</code></td><td>Downward area sloping right — cumulative cash drag over 3 years.</td></tr>
+      <tr><td>W4</td><td><code>−15.5pp</code></td><td>4 yearly bars grow from baseline. 2024 (white) towers below; others muted gray.</td></tr>
+      <tr><td>W5</td><td><code>−18.4%</code></td><td>Peak-to-trough line draws in. Two markers (peak gray, trough white).</td></tr>
+      <tr><td>W6</td><td><code>38 / 60</code></td><td>60-notch bar wipes in but <em>stops at 38</em>. The stopping IS the message.</td></tr>
+      <tr><td>W7</td><td><code>47 days</code></td><td>7×7 grid wipes in. 47 white cells + 2 empty (with hairline border).</td></tr>
+      <tr><td>W8</td><td><code>1y 8m</code></td><td>5×4 grid of 20 month cells wipes in. All filled.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Templated phases (identical across all 8)</h3>
+  <ul>
+    <li><strong>Phase 2 (number tick-in):</strong> 2.5–2.75s, scale 0.97 → 1, opacity 0 → 1, linear 200ms.</li>
+    <li><strong>Phase 3 (clean state):</strong> 5.0–8.0s. Eyebrow + Meta fade in at 5.0–5.3s, hold 2.4s.</li>
+    <li><strong>Phase 4 (callout):</strong> 8.5–10.0s. Number scales to 0.45, translates up. Callout fades in with bold word.</li>
+    <li><strong>Phase 5 (end card):</strong> 10.0–11.0s. URL + handle.</li>
+  </ul>
+
+  <h3>Callouts (Phase 4)</h3>
+  <table>
+    <thead><tr><th>W</th><th>Callout</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td>Up. And still <strong>behind</strong>.</td></tr>
+      <tr><td>W2</td><td>Nineteen wins. <strong>Thirty-one losses</strong>.</td></tr>
+      <tr><td>W3</td><td>Idle. <strong>Still expensive</strong>.</td></tr>
+      <tr><td>W4</td><td>A good year. <strong>By the wrong measure</strong>.</td></tr>
+      <tr><td>W5</td><td>Peak. Then <strong>trough</strong>.</td></tr>
+      <tr><td>W6</td><td>Not <strong>yet</strong>.</td></tr>
+      <tr><td>W7</td><td>Forty-seven days. <strong>Recorded</strong>.</td></tr>
+      <tr><td>W8</td><td>Time. Not <strong>activity</strong>.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Next step — automation pipeline</h3>
+  <p>Once design locked, automate with:</p>
+  <ul>
+    <li><strong>Playwright</strong> opens each reel, waits for animation, captures PNG frames at 30fps for 11s = 330 frames per reel.</li>
+    <li><strong>FFmpeg</strong> compiles PNG sequence → MP4 (H.264, 30fps, 8 Mbps).</li>
+    <li>Single Python script: <code>python generate.py --week 1</code> → outputs <code>W01.mp4</code>.</li>
+    <li>8 reels × 5 min per reel = ~40 min for full series export. Or batch: <code>python generate.py --all</code>.</li>
+  </ul>
+
+  <h3>Auto-play behavior</h3>
+  <p>Each reel uses Intersection Observer — when scrolled into view (50% visible), animation plays. When scrolled out, animation resets. ↺ Replay button restarts the active reel.</p>
+</div>
+
+<script>
+  // generate W2 dots: 19 winners + 31 losers
+  (function() {
+    const grid = document.getElementById('dotgrid');
+    if (!grid) return;
+    for (let i = 0; i < 50; i++) {
+      const d = document.createElement('span');
+      d.className = 'dot' + (i < 19 ? ' win' : '');
+      grid.appendChild(d);
+    }
+  })();
+
+  // generate W6 notches: 60 total, 38 filled
+  (function() {
+    const bar = document.getElementById('notchbar');
+    if (!bar) return;
+    for (let i = 0; i < 60; i++) {
+      const n = document.createElement('span');
+      n.className = 'notch' + (i < 38 ? ' filled' : '');
+      bar.appendChild(n);
+    }
+  })();
+
+  // generate W7 days: 49 cells, 47 filled + 2 empty
+  (function() {
+    const grid = document.getElementById('daygrid');
+    if (!grid) return;
+    for (let i = 0; i < 49; i++) {
+      const d = document.createElement('span');
+      d.className = 'day' + (i >= 47 ? ' empty' : '');
+      grid.appendChild(d);
+    }
+  })();
+
+  // generate W8 months: 20 cells
+  (function() {
+    const grid = document.getElementById('monthgrid');
+    if (!grid) return;
+    for (let i = 0; i < 20; i++) {
+      const m = document.createElement('span');
+      m.className = 'month';
+      grid.appendChild(m);
+    }
+  })();
+
+  // Intersection Observer — autoplay reels when in view
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('playing');
+      } else {
+        entry.target.classList.remove('playing');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.reel').forEach(reel => observer.observe(reel));
+
+  // Per-reel replay function
+  function replay(id) {
+    const reel = document.getElementById(id);
+    if (!reel) return;
+    reel.classList.remove('playing');
+    // Force reflow to restart CSS animations
+    void reel.offsetWidth;
+    reel.classList.add('playing');
+  }
+  window.replay = replay;
+</script>
+
+</body>
+</html>
